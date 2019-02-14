@@ -30,7 +30,7 @@ import Server
 
 # Default values if no cmd parameters are passed
 __address = 'localhost'
-__port = 1090
+__port = 35000
 __startshell = False
 
 for arg in sys.argv:
@@ -42,4 +42,5 @@ for arg in sys.argv:
     elif temp[0] == '-shell':
         __startshell = True
 
+print ('Starting server on ', __address,':',__port)
 Server.startserver(__address, int(__port), __startshell)
