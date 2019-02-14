@@ -10,23 +10,55 @@ def startserver(address, port, startshell):
     """Starts a simulator instance at the given address and port.
     If startshell is True, a seperate python instance will be created
     that is connected to the server"""
-    s = socket()
-    s.bind((address, port))
-    s.listen(2)
+    sock = socket()
+    sock.bind((address, port))
+    sock.listen(2)
 
     if startshell:
-        subprocess.Popen([sys.executable, __workingdir + '\Shell.py', address, str(port)])
-
-    c, addr = s.accept()
+        subprocess.Popen([sys.executable, __workingdir + '/Shell.py', address, str(port)])
 
     while True:
+        conn, addr = sock.accept()
+        print('Connected to client at ', addr)
+        while True:
+            response = IO.readinputbytes(getCmd(conn))
+            if response == '':
+                conn.close()
+                break
+
+            else:
+                print ('response:', response)
+                try:
+                    conn.send(str.encode(response.getresponse()))
+                except:
+                    conn.close()
+                    break
+
+
+def getCmd(c):   
+    """
+        reads the next cr delimited command from the socket
+        filters out linefeeds
+        returns a normalized string command
+        or empty string if read fails
+    """
+    cmd=''
+    while True:
         try:
-            data = c.recv(16).decode('utf-8')
-            data = str.replace(data, '\r', '')  # ELM Queries terminate w/ carriage return. Remove.
+            data = c.recv(1).decode('utf-8')
         except:
-            print('ERROR: Failed to parse byte string')
-            continue
+            return ''
 
-        response = IO.readinputbytes(data)
+        if not data:
+            return ''
 
-        c.send(str.encode(response.getresponse()))
+        if data == '\n':
+            continue    # ignore linefeed 
+
+        if data == '\r': # cr is terminator, but ignore it
+            break
+
+        cmd += data.upper()
+
+    print ('received:', cmd)
+    return cmd  
