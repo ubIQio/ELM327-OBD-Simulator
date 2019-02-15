@@ -27,12 +27,11 @@ conversion will be attempted to "01 0C". This is strictly to emulate ELM 327 dev
 Currently supports:
 * Mode 01
 * All PIDs up to 60
-* Mode 02
-* Mode 03
+* ATDP
 * ATRV
 
 Planned:
-* Modes 02, 03, 04, 07
+* Modes 04, 07
 * Logging
 * User specified values
 * Engine simulation
