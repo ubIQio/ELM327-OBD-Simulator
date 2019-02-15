@@ -1,12 +1,10 @@
 # ELM 327 OBD Simulator
 --------------
-ELM327 OBD Simulator is an OBD2 compliant simulator adhering to the SAE standard J/1979 and ELM 327 command protocol.
+ELM327 OBD Simulator is an OBD2 compliant simulator adhering to the SAE standard J/1979 and ELM 327 command protocol, accessible over a socket
 
 ### About OBD2
 ----------------
-In order to get engine sensor specific data, two bytes are written to the OBD2 port (I call these "query bytes"), and up to eight bytes are returned. This is best demonstrated with an example. Say we
-wish
- to get the Engine RPM. We would write 01 and 0C ("01 0C"), and would receive something akin to "41 0C 20 BC" back. The first two bytes, "41 0C" are the response code indicating the following bytes will describe the engine RPM's actual value. Therefore, "20 BC" are the two bytes representing the current Engine RPM. This query only returns two bytes, but queries can return as many as six bytes (plus the first two bytes for the response code, so a maximum eight). To calculate the ACTUAL value of the Engine RPM  from the bytes, a specific formula is needed (for Engine RPM it's ``((A*256)+B)/4``.
+In order to get engine sensor specific data, two bytes are written to the OBD2 port (I call these "query bytes"), and up to eight bytes are returned. This is best demonstrated with an example. Say we wish to get the Engine RPM. We would write 01 and 0C ("01 0C"), and would receive something akin to "41 0C 20 BC" back. The first two bytes, "41 0C" are the response code indicating the following bytes will describe the engine RPM's actual value. Therefore, "20 BC" are the two bytes representing the current Engine RPM. This query only returns two bytes, but queries can return as many as six bytes (plus the first two bytes for the response code, so a maximum eight). To calculate the ACTUAL value of the Engine RPM  from the bytes, a specific formula is needed (for Engine RPM it's ``((A*256)+B)/4``.
 
 ### What ELM327 OBD Simulator Does
 ---------------------------
@@ -17,7 +15,7 @@ ELM 327 OBD Simulator creates a server instance at the specified address and por
 ```
 python.exe Program.py -address=localhost -port=1090 -shell
 ```
-* If the address and the port are not specified, the defaults "localhost" and "1090" will be used.
+* If the address and the port are not specified, the defaults "localhost" and "35000" will be used.
 * If -shell is passed, a separate python instance wll be created with a shell connected to the OBD Simulator server
 instance's address and port.
 
@@ -29,6 +27,9 @@ conversion will be attempted to "01 0C". This is strictly to emulate ELM 327 dev
 Currently supports:
 * Mode 01
 * All PIDs up to 60
+* Mode 02
+* Mode 03
+* ATRV
 
 Planned:
 * Modes 02, 03, 04, 07
